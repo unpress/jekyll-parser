@@ -1,0 +1,23 @@
+{
+  "name": "jekyll-parser",
+  "version": "0.0.1",
+  "description": "Node.js library for parsing jekyll projects",
+  "main": "index.js",
+  "scripts": {
+    "test": "cucumber-js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/unpress/jekyll-parser.git"
+  },
+  "keywords": [
+    "jekyll",
+    "parser"
+  ],
+  "author": "Niklas Närhinen <niklas@narhinen.net>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/unpress/jekyll-parser/issues"
+  },
+  "homepage": "https://github.com/unpress/jekyll-parser"
+}
