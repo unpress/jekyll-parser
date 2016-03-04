@@ -31,6 +31,18 @@ module.exports = function() {
     });
   });
 
+  this.Given(/^project$/, (callback) => {
+    tmp.dir((err, p) => {
+      this.projectPath = p;
+      if (err) return callback(err);
+      callback();
+    });
+  });
+
+  this.Given(/^file "([^"]*)" with content:$/, (arg1, string, callback) => {
+    createFileWithDirectories(path.join(this.projectPath, arg1), string).then(() => callback()).catch(callback);
+  });
+
   this.When(/^I parse the project$/, callback => {
     let parser = new ProjectParser(this.projectPath);
     parser.parse().then(res => {
@@ -42,6 +54,22 @@ module.exports = function() {
   this.Then(/^the parsed project should have (\d+) layout$/, (arg1, callback) => {
     let count = Number(arg1);
     assert.equal(this.parsedProject.layouts.length, count);
+    callback();
+  });
+
+  this.Then(/^the first layout should be named "([^"]*)"$/, (arg1, callback) => {
+    assert.equal(this.parsedProject.layouts[0].name, arg1);
+    callback();
+  });
+
+  this.Then(/^the parsed project should have (\d+) post$/, (arg1, callback) => {
+    let count = Number(arg1);
+    assert.equal(this.parsedProject.posts.length, count);
+    callback();
+  });
+
+  this.Then(/^the first post should have title "([^"]*)"$/, (arg1, callback) => {
+    assert.equal(this.parsedProject.posts[0].meta.title, arg1);
     callback();
   });
 };
