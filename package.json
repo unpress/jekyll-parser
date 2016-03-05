@@ -2,7 +2,7 @@
   "name": "jekyll-parser",
   "version": "0.0.1",
   "description": "Node.js library for parsing jekyll projects",
-  "main": "index.js",
+  "main": "lib/index.js",
   "watch": {
     "test": {
       "patterns": [
@@ -10,10 +10,15 @@
         "features"
       ],
       "extensions": "js,feature"
+    },
+    "build": {
+      "patterns": ["src"],
+      "extensions": "js"
     }
   },
   "scripts": {
     "test": "babel-node node_modules/.bin/cucumber-js --format summary",
+    "build": "babel src --out-dir lib",
     "watch": "npm-watch"
   },
   "repository": {
