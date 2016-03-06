@@ -3,6 +3,7 @@ import path from 'path';
 import fs from 'fs';
 import mkdirp from 'mkdirp';
 import { assert } from 'chai';
+import cp from 'cp';
 
 import ProjectParser from '../../src/parser/project';
 
@@ -71,5 +72,27 @@ module.exports = function() {
   this.Then(/^the first post should have title "([^"]*)"$/, (arg1, callback) => {
     assert.equal(this.parsedProject.posts[0].meta.title, arg1);
     callback();
+  });
+
+  this.Given(/^image "([^"]*)"$/, (arg1, callback) => {
+    mkdirp(path.resolve(this.projectPath, path.dirname(arg1)), (err) => {
+      if (err) return callback(err);
+      cp(path.resolve(__dirname, '..', 'assets', arg1), path.resolve(this.projectPath, arg1), callback);
+    });
+  });
+
+  this.Then(/^the parsed project should have image with key "([^"]*)"$/, (arg1, callback) => {
+    assert(this.parsedProject.images.some(i => i.key === arg1), `has image with key ${arg1}`);
+    callback();
+  });
+
+  this.Then(/^the mime type of image "([^"]*)" should be "([^"]*)"$/, (key, mime, cb) => {
+    assert.equal(this.parsedProject.images.find(i => i.key === key).mimeType, mime);
+    cb();
+  });
+
+  this.Then(/^the base64 representation of image "([^"]*)" should be "([^"]*)"$/, (key, base64, cb) => {
+    assert.equal(this.parsedProject.images.find(i => i.key === key).base64, base64);
+    cb();
   });
 };

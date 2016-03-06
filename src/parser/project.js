@@ -1,6 +1,7 @@
 import walk from 'walk';
 import path from 'path';
 import fs from 'fs';
+import mime from 'mime';
 
 import PostParser from './post';
 
@@ -14,7 +15,8 @@ export default class ProjectParser {
     return new Promise(resolve => {
       let out = {
         layouts: [],
-        posts: []
+        posts: [],
+        images: []
       };
       let walker = walk.walk(this.root);
       walker.on('file', (root, fileStats, next) => {
@@ -29,6 +31,20 @@ export default class ProjectParser {
           fs.readFile(path.join(root, fileStats.name), 'utf8', (err, str) => {
             if (err) return next(err);
             out.posts.push(postParser.parse(str));
+            next();
+          });
+        }
+        else if (mime.lookup(fileStats.name).indexOf('image/') === 0) {
+          fs.readFile(path.join(root, fileStats.name), (err, buf) => {
+            if (err) return next(err);
+            out.images.push({
+              mimeType: mime.lookup(fileStats.name),
+              key: path.join(
+                root,
+                fileStats.name
+              ).replace(path.resolve(this.root), '').replace(/^\//, ''),
+              base64: buf.toString('base64')
+            });
             next();
           });
         }
